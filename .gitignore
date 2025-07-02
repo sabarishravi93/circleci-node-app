@@ -1,0 +1,14 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+crash.log
+*.log
+
+# Ignore override files used locally, not for CI
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json_*
+
