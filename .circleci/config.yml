@@ -1,0 +1,46 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.20
+
+jobs:
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm test
+
+  deploy:
+    docker:
+      - image: hashicorp/terraform:1.6.6
+    steps:
+      - checkout
+      - run: terraform init
+      - run: terraform apply -auto-approve
+
+  destroy:
+    docker:
+      - image: hashicorp/terraform:1.6.6
+    steps:
+      - checkout
+      - run: terraform init
+      - run: terraform destroy -auto-approve
+
+workflows:
+  version: 2
+  ci-flow:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+      - hold-for-destroy:
+          type: approval
+          requires:
+            - deploy
+      - destroy:
+          requires:
+            - hold-for-destroy
