@@ -1,13 +1,16 @@
-
 provider "aws" {
-  region = "us-east-1"  # Change region as needed
+  region = var.aws_region
 }
 
-resource "aws_instance" "example" {
-  ami           = "ami-05ffe3c48a9991133"  # Amazon Linux 2 in us-east-1
-  instance_type = "t2.micro"
+# Configure Terraform version
+terraform {
+  required_version = ">= 1.0"
 
-  tags = {
-    Name = "circleci-ec2"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
+
